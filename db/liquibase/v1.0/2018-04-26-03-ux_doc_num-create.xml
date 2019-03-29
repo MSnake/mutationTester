@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2018-04-26-03-ux_doc_num-create" author="lavrichenko_oy" dbms="postgresql">
+        <preConditions onFail="HALT" onFailMessage="Необходимо переписать индекс уникальности под нужды конкретного приложения">
+            <sqlCheck expectedResult="etalon_doc">SELECT CURRENT_SCHEMA</sqlCheck>
+            <sqlCheck expectedResult="oasi_dev">SELECT CURRENT_CATALOG</sqlCheck>
+        </preConditions>
+        <sql>
+            CREATE UNIQUE INDEX UX_DOC_NUM ON DOCUMENTS((JSON_DATA -> 'DOCUMENT' ->> 'DOC_NUM')) WHERE DOC_TYPE = 'APPTEMPLATE_DOCUMENT';
+        </sql>
+
+        <rollback>
+            <dropIndex tableName="DOCUMENTS" indexName="UX_DOC_NUM"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

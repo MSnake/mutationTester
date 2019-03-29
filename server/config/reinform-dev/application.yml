@@ -1,0 +1,35 @@
+server:
+  port: 8080
+  contextPath: /@name@
+
+logging:
+  level:
+    ru:
+      reinform: debug
+
+    org:
+      springframework:
+        boot:
+          context:
+            embedded:
+              tomcat:
+                TomcatEmbeddedServletContainer: debug
+
+endpoints:
+  logfile:
+    enabled: true
+    external-file: logs/@name@.log
+
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/tester
+        username: postgres
+        password: admin
+        type: com.zaxxer.hikari.HikariDataSource
+    jpa:
+        database-platform: org.hibernate.dialect.PostgresPlusDialect
+        
+#настройки приложения
+app:
+    key1:
+    key2:
