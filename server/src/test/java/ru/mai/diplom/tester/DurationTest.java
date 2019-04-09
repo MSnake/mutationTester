@@ -1,4 +1,4 @@
-package ru.mai.diplom.tester.test;
+package ru.mai.diplom.tester;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

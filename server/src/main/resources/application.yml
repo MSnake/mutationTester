@@ -1,31 +1,31 @@
 logging:
   level:
     ru:
-      mai: debug
+      computel: debug
 
     org:
+#      apache:
+#        cxf:
+#          services: info
+
       springframework:
         boot:
           context:
             embedded:
               tomcat:
                 TomcatEmbeddedServletContainer: debug
-
-endpoints:
-  logfile:
-    enabled: true
-    external-file: logs/@name@.log
-
 spring:
     datasource:
-        url: jdbc:postgresql://localhost:5432/tester
+        url: jdbc:postgresql://localhost:5432/tester??currentSchema=tester
         username: postgres
         password: admin
         type: com.zaxxer.hikari.HikariDataSource
     jpa:
         database-platform: org.hibernate.dialect.PostgresPlusDialect
-        
-#настройки приложения
-app:
-    key1:
-    key2:
+        properties:
+          hibernate:
+            temp:
+              use_jdbc_metadata_defaults: false
+    liquibase:
+        default-schema: tester
+        change-log: classpath:db/liquibase-changelog.xml

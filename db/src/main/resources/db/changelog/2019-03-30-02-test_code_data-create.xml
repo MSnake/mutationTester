@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2019-03-30-02-test_code_data-create" author="msnake" dbms="postgresql">
+        <createTable tableName="TEST_CODE_DATA">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="PK_TEST_CODE_DATA"/>
+            </column>
+            <column name="CODE_TEXT" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MD5" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SOURCE_CODE_DATA_ID" type="BIGINT"/>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="TEST_CODE_DATA" cascadeConstraints="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2019-03-30-02-test_code_data-create(add foreign key for SOURCE_CODE_DATA_ID in TEST_CODE_DATA)" author="msnake" dbms="postgresql">
+        <addForeignKeyConstraint baseColumnNames="SOURCE_CODE_DATA_ID" baseTableName="TEST_CODE_DATA" constraintName="FK_TEST_CODE_DATA_SOURCE_ID" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="SOURCE_CODE_DATA"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="TEST_CODE_DATA" constraintName="FK_TEST_CODE_DATA_SOURCE_ID"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

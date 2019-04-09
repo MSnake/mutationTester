@@ -12,7 +12,7 @@
     <modules>
         <module>db</module>
         <module>server</module>
-        <module>maven-master</module>
+        <!--<module>maven-master</module>-->
     </modules>
 
 </project>

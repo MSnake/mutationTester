@@ -11,43 +11,66 @@
 
     <name>tester-server</name>
 
+    <!--<parent>-->
+    <!--<groupId>ru.mai.diplom.tester</groupId>-->
+    <!--<artifactId>maven-master</artifactId>-->
+    <!--<version>1.0.0</version>-->
+    <!--<relativePath>../maven-master/pom.xml</relativePath>-->
+    <!--</parent>-->
+
     <parent>
-        <groupId>ru.mai.diplom.tester</groupId>
-        <artifactId>maven-master</artifactId>
-        <version>1.0.0</version>
-        <relativePath>../maven-master/pom.xml</relativePath>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.4.RELEASE</version>
     </parent>
 
     <properties>
-		<tester-db.version>[1,)</tester-db.version>
+        <!-- Версия Java -->
+        <java.version>1.8</java.version>
+        <!-- Настройка кодировки -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Не деплоить локально -->
+        <maven.install.skip>true</maven.install.skip>
+        <!-- Корневой путь приложения -->
+        <root.directory>${project.basedir}</root.directory>
+        <tester-db.version>[1,)</tester-db.version>
     </properties>
 
     <dependencies>
-        <!--&lt;!&ndash; submodule &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>ru.mai.diplom.tester</groupId>-->
-            <!--<artifactId>tester-db</artifactId>-->
-            <!--<version>${tester-db.version}</version>-->
-        <!--</dependency>-->
-
-        <!-- Logging -->
+        <!-- submodule -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>ru.mai.diplom.tester</groupId>
+            <artifactId>tester-db</artifactId>
+            <version>${tester-db.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.swinglabs.swingx</groupId>
-            <artifactId>swingx-core</artifactId>
-            <version>1.6.5-1</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- Code generator -->
+        <!-- ObjectMapper -->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
         </dependency>
-</dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+        </dependency>
+
+        <!-- Tests -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <finalName>${project.name}</finalName>
@@ -61,5 +84,18 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+        <plugins>
+            <!-- установить версию компилятора -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

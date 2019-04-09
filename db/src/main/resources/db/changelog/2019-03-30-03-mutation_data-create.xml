@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2019-03-30-03-mutation_data-create" author="msnake" dbms="postgresql">
+        <createTable tableName="MUTATION_DATA">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="PK_MUTATION_DATA"/>
+            </column>
+            <column name="CODE_TEXT" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MD5" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OPTIONS" type="JSONB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SOURCE_CODE_ID" type="BIGINT"/>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="MUTATION_DATA" cascadeConstraints="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2019-03-30-03-mutation_data-create(add foreign key for SOURCE_CODE_ID in MUTATION_DATA)"
+               author="msnake" dbms="postgresql">
+        <addForeignKeyConstraint baseColumnNames="SOURCE_CODE_ID" baseTableName="MUTATION_DATA"
+                                 constraintName="FK_MUTATION_DATA_SOURCE_CODE_ID" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="ID" referencedTableName="SOURCE_CODE_DATA"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="MUTATION_DATA" constraintName="FK_MUTATION_DATA_SOURCE_CODE_ID"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

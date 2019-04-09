@@ -13,24 +13,22 @@
         <!--<groupId>ru.mai.diplom.tester</groupId>-->
         <!--<artifactId>maven-master</artifactId>-->
         <!--<version>1.0.0</version>-->
+        <!--<relativePath>../maven-master/pom.xml</relativePath>-->
     <!--</parent>-->
 
     <properties>
-        <!-- Версии зависимостей-->
-        <postgres.version>42.2.2</postgres.version>
-        <!-- Версии зависимостей-->
-        <postgres.version>42.2.2</postgres.version>
-
         <!-- Настройка кодировки -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <!-- Версия Java -->
-        <java.version>1.8</java.version>
-
+        <!-- Версии зависимостей-->
+        <postgres.version>42.2.2</postgres.version>
+        <env.resources>config</env.resources>
+        <liquibase.changeLogFile>liquibase/changelog.xml</liquibase.changeLogFile>
+        <liquibase.propertyFile>${env.resources}/liquibase.properties</liquibase.propertyFile>
         <!-- Не деплоить локально и в Nexus -->
         <maven.install.skip>true</maven.install.skip>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <!-- Версия Java -->
+        <java.version>1.8</java.version>
 
         <!-- Корневой путь приложения -->
         <root.directory>${project.basedir}</root.directory>
@@ -52,7 +50,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
 
 
     <dependencies>
@@ -81,7 +78,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Tests -->
@@ -90,7 +86,39 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
     </dependencies>
+
+    <!--<profiles>-->
+        <!--&lt;!&ndash; liquibase &ndash;&gt;-->
+        <!--<profile>-->
+            <!--<id>liquibase</id>-->
+            <!--<build>-->
+                <!--<plugins>-->
+                    <!--<plugin>-->
+                        <!--<groupId>org.liquibase</groupId>-->
+                        <!--<artifactId>liquibase-maven-plugin</artifactId>-->
+                        <!--<version>3.4.2</version>-->
+                        <!--<configuration>-->
+                            <!--<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>-->
+                        <!--</configuration>-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<phase>process-resources</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>update</goal>-->
+                                <!--</goals>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                    <!--</plugin>-->
+                <!--</plugins>-->
+            <!--</build>-->
+        <!--</profile>-->
+    <!--</profiles>-->
 
 
     <build>

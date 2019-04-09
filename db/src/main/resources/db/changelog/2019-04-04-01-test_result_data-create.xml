@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2019-04-04-01-test_result_data-create" author="msnake" dbms="postgresql">
+        <createTable tableName="TEST_RESULT_DATA">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="PK_TEST_RESULT_DATA"/>
+            </column>
+            <column name="TEST_CODE_DATA_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MUTATION_DATA_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RESULT_TEXT" type="CLOB"/>
+            <column name="STATUS" type="VARCHAR(32)"/>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="TEST_RESULT_DATA" cascadeConstraints="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2019-04-04-01-test_result_data-create(add foreign key for TEST_CODE_DATA_ID in TEST_RESULT_DATA)"
+               author="msnake" dbms="postgresql">
+        <addForeignKeyConstraint baseColumnNames="TEST_CODE_DATA_ID" baseTableName="TEST_RESULT_DATA"
+                                 constraintName="FK_TEST_RESULT_DATA_TEST_CODE_DATA_ID" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="ID" referencedTableName="TEST_CODE_DATA"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="TEST_RESULT_DATA" constraintName="FK_EST_RESULT_DATA_TEST_CODE_DATA_ID"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2019-04-04-01-test_result_data-create(add foreign key for MUTATION_DATA_ID in TEST_RESULT_DATA)"
+               author="msnake" dbms="postgresql">
+        <addForeignKeyConstraint baseColumnNames="MUTATION_DATA_ID" baseTableName="TEST_RESULT_DATA"
+                                 constraintName="FK_TEST_RESULT_DATA_MUTATION_DATA_ID" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="ID" referencedTableName="MUTATION_DATA"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="TEST_RESULT_DATA" constraintName="FK_TEST_RESULT_DATA_MUTATION_DATA_ID"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
