@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mai.diplom.tester.db.dao.SourceCodeDataDao;
 import ru.mai.diplom.tester.db.dao.TestCodeDataDao;
+import ru.mai.diplom.tester.db.model.MutationData;
 import ru.mai.diplom.tester.db.model.SourceCodeData;
 import ru.mai.diplom.tester.db.model.TestCodeData;
+import ru.mai.diplom.tester.utils.DigestUtils;
 
 import java.util.Optional;
 
@@ -21,9 +23,20 @@ public class TestCodeService {
     @Autowired
     TestCodeDataDao dao;
 
+    @Autowired
+    TestResultDataService testResultDataService;
+
     public TestCodeData createTestCodeData(@NonNull String codeText) {
-        TestCodeData data = new TestCodeData();
-        data.setCodeText(codeText);
+        TestCodeData data = null;
+        String md5 = DigestUtils.getMd5(codeText);
+        Optional<TestCodeData> byMd5Data = findByMd5Data(md5);
+        if (byMd5Data.isPresent()) {
+            data = byMd5Data.get();
+        } else {
+            data = new TestCodeData();
+            data.setCodeText(codeText);
+            data.setMd5Data(md5);
+        }
         return data;
     }
 
@@ -33,11 +46,16 @@ public class TestCodeService {
 
     public TestCodeData save(@NonNull String codeText) {
         TestCodeData data = createTestCodeData(codeText);
-        return dao.saveAndFlush(data);
+        TestCodeData saved = dao.saveAndFlush(data);
+        return saved;
     }
 
     public Optional<TestCodeData> findById(@NonNull Long id) {
         return dao.findById(id);
+    }
+
+    public Optional<TestCodeData> findByMd5Data(@NonNull String md5Data) {
+        return dao.findByMd5Data(md5Data);
     }
 
     public TestCodeData getById(@NonNull Long id) {

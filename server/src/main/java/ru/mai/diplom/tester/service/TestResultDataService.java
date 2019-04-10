@@ -35,8 +35,22 @@ public class TestResultDataService {
     }
 
     public TestResultData create(@NonNull TestCodeData testCodeData, @NonNull MutationData mutationData) {
-        TestResultData data = createTestResultData(testCodeData, mutationData);
-        return dao.saveAndFlush(data);
+        TestResultData result = null;
+        if (testCodeData.getId() == null || mutationData.getId() == null) {
+            throw new RuntimeException("Test code data or mutation data not defined in the system");
+        }
+        Optional<TestResultData> founded = findByTestCodeDataAndAndMutationData(testCodeData, mutationData);
+        if (founded.isPresent()) {
+            result = founded.get();
+        } else {
+            TestResultData data = createTestResultData(testCodeData, mutationData);
+            result = dao.saveAndFlush(data);
+        }
+        return result;
+    }
+
+    public Optional<TestResultData> findByTestCodeDataAndAndMutationData(TestCodeData testCodeData, MutationData mutationData) {
+        return dao.findByTestCodeDataAndAndMutationData(testCodeData, mutationData);
     }
 
     public Optional<TestResultData> findById(@NonNull Long id) {

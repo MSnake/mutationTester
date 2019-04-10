@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -40,8 +41,12 @@ public class SourceCodeData {
             if (mutationDataList == null) {
                 mutationDataList = new HashSet<MutationData>();
             }
-            mutationDataList.add(data);
-            data.setSourceCodeData(this);
+            Optional<MutationData> founded = mutationDataList.stream()
+                    .filter(mutationData -> mutationData.getMd5Data().equalsIgnoreCase(data.getMd5Data())).findFirst();
+            if (!founded.isPresent()) {
+                mutationDataList.add(data);
+                data.setSourceCodeData(this);
+            }
         }
     }
 
@@ -52,8 +57,12 @@ public class SourceCodeData {
             if (testCodeDataList == null) {
                 testCodeDataList = new HashSet<TestCodeData>();
             }
-            testCodeDataList.add(data);
-            data.setSourceCodeData(this);
+            Optional<TestCodeData> founded = testCodeDataList.stream()
+                    .filter(testCode -> testCode.getMd5Data().equalsIgnoreCase(data.getMd5Data())).findFirst();
+            if (!founded.isPresent()) {
+                testCodeDataList.add(data);
+                data.setSourceCodeData(this);
+            }
         }
     }
 }

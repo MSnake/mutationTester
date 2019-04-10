@@ -1,5 +1,6 @@
 package ru.mai.diplom.tester.component.gui;
 
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 import ru.mai.diplom.tester.component.CommonGuiComponent;
 
@@ -10,6 +11,7 @@ import java.awt.*;
  * Билдер панели "Мутационные преобразования"
  */
 @Component
+@Getter
 public class MutationOptionPanelBuilder implements GuiPanelBuilderInterface {
 
     @Override
@@ -41,9 +43,9 @@ public class MutationOptionPanelBuilder implements GuiPanelBuilderInterface {
 
     private JPanel createRemoveRowsPanel() {
         JPanel result = new JPanel(new BorderLayout());
-        JCheckBox removeRowsCheckBox =  new JCheckBox("Удаление строк");
-        removeRowsCheckBox.setFont(CommonGuiComponent.createCheckBoxFont());
-        result.add(removeRowsCheckBox, BorderLayout.NORTH);
+
+        CommonGuiComponent.removeRowsCheckBox.setFont(CommonGuiComponent.createCheckBoxFont());
+        result.add(CommonGuiComponent.removeRowsCheckBox, BorderLayout.NORTH);
 
         JPanel panel = new JPanel();
         FlowLayout layout = new FlowLayout();
@@ -53,14 +55,13 @@ public class MutationOptionPanelBuilder implements GuiPanelBuilderInterface {
         JLabel label = new JLabel("Номера строк:");
         label.setFont(CommonGuiComponent.createMainNormalFont());
 
-        JTextField rowNumbersTextField = new JTextField();
-        rowNumbersTextField.setFont(CommonGuiComponent.createMainItalicFont());
-        rowNumbersTextField.setEnabled(true);
-        rowNumbersTextField.setEditable(true);
-        rowNumbersTextField.setColumns(15);
+        CommonGuiComponent.removeRowNumbersTextField.setFont(CommonGuiComponent.createMainItalicFont());
+        CommonGuiComponent.removeRowNumbersTextField.setEnabled(true);
+        CommonGuiComponent.removeRowNumbersTextField.setEditable(true);
+        CommonGuiComponent.removeRowNumbersTextField.setColumns(15);
 
         panel.add(label);
-        panel.add(rowNumbersTextField);
+        panel.add(CommonGuiComponent.removeRowNumbersTextField);
 
         panel.setBorder(CommonGuiComponent.marginBorder);
 
@@ -71,10 +72,9 @@ public class MutationOptionPanelBuilder implements GuiPanelBuilderInterface {
     private JPanel createRevertRowsPanel() {
         JPanel result = new JPanel(new BorderLayout());
 
-        JCheckBox removeRowsCheckBox =  new JCheckBox("Отрицание условных операторов");
-        removeRowsCheckBox.setFont(CommonGuiComponent.createCheckBoxFont());
+        CommonGuiComponent.revertIfCheckBox.setFont(CommonGuiComponent.createCheckBoxFont());
 
-        result.add(removeRowsCheckBox, BorderLayout.CENTER);
+        result.add(CommonGuiComponent.revertIfCheckBox, BorderLayout.CENTER);
 
         return result;
     }
@@ -82,8 +82,7 @@ public class MutationOptionPanelBuilder implements GuiPanelBuilderInterface {
     private JPanel createReplaceRowsPanel() {
         JPanel result = new JPanel(new BorderLayout());
 
-        JCheckBox removeRowsCheckBox =  new JCheckBox("Подмена знаков");
-        removeRowsCheckBox.setFont(CommonGuiComponent.createCheckBoxFont());
+        CommonGuiComponent.replaceRowsCheckBox.setFont(CommonGuiComponent.createCheckBoxFont());
 
         JPanel panel = new JPanel();
         FlowLayout layout = new FlowLayout();
@@ -93,29 +92,27 @@ public class MutationOptionPanelBuilder implements GuiPanelBuilderInterface {
         JLabel label1 = new JLabel("Замена");
         label1.setFont(CommonGuiComponent.createMainNormalFont());
 
-        JTextField replacedCharTextField = new JTextField();
-        replacedCharTextField.setFont(CommonGuiComponent.createMainItalicFont());
-        replacedCharTextField.setEnabled(true);
-        replacedCharTextField.setEditable(true);
-        replacedCharTextField.setColumns(15);
+        CommonGuiComponent.replacedCharTextField.setFont(CommonGuiComponent.createMainItalicFont());
+        CommonGuiComponent.replacedCharTextField.setEnabled(true);
+        CommonGuiComponent.replacedCharTextField.setEditable(true);
+        CommonGuiComponent.replacedCharTextField.setColumns(15);
 
         JLabel label2 = new JLabel("на");
         label2.setFont(CommonGuiComponent.createMainNormalFont());
 
-        JTextField replaceToCharTextField = new JTextField();
-        replaceToCharTextField.setFont(CommonGuiComponent.createMainItalicFont());
-        replaceToCharTextField.setEnabled(true);
-        replaceToCharTextField.setEditable(true);
-        replaceToCharTextField.setColumns(15);
+        CommonGuiComponent.replaceToCharTextField.setFont(CommonGuiComponent.createMainItalicFont());
+        CommonGuiComponent.replaceToCharTextField.setEnabled(true);
+        CommonGuiComponent.replaceToCharTextField.setEditable(true);
+        CommonGuiComponent.replaceToCharTextField.setColumns(15);
 
         panel.add(label1);
-        panel.add(replacedCharTextField);
+        panel.add(CommonGuiComponent.replacedCharTextField);
         panel.add(label2);
-        panel.add(replaceToCharTextField);
+        panel.add(CommonGuiComponent.replaceToCharTextField);
 
         panel.setBorder(CommonGuiComponent.marginBorder);
 
-        result.add(removeRowsCheckBox, BorderLayout.NORTH);
+        result.add(CommonGuiComponent.replaceRowsCheckBox, BorderLayout.NORTH);
         result.add(panel, BorderLayout.CENTER);
 
         return result;

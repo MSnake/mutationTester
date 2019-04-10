@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mai.diplom.tester.db.dao.SourceCodeDataDao;
+import ru.mai.diplom.tester.db.model.MutationData;
 import ru.mai.diplom.tester.db.model.SourceCodeData;
 import ru.mai.diplom.tester.utils.DigestUtils;
 
@@ -21,9 +22,16 @@ public class SourceCodeService {
     SourceCodeDataDao dao;
 
     public SourceCodeData createSourceCodeData(@NonNull String codeText) {
-        SourceCodeData data = new SourceCodeData();
-        data.setCodeText(codeText);
-        data.setMd5Data(DigestUtils.getMd5(codeText));
+        SourceCodeData data = null;
+        String md5 = DigestUtils.getMd5(codeText);
+        Optional<SourceCodeData> byMd5Data = findByMd5Data(md5);
+        if (byMd5Data.isPresent()) {
+            data = byMd5Data.get();
+        } else {
+            data = new SourceCodeData();
+            data.setCodeText(codeText);
+            data.setMd5Data(md5);
+        }
         return data;
     }
 
@@ -38,6 +46,10 @@ public class SourceCodeService {
 
     public Optional<SourceCodeData> findById(@NonNull Long id) {
         return dao.findById(id);
+    }
+
+    public Optional<SourceCodeData> findByMd5Data(@NonNull String md5Data) {
+        return dao.findByMd5Data(md5Data);
     }
 
     public SourceCodeData getById(@NonNull Long id) {

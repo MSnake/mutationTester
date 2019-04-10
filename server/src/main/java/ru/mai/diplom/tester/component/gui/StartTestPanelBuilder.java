@@ -16,10 +16,8 @@ public class StartTestPanelBuilder implements GuiPanelBuilderInterface {
     public JPanel build() {
         JPanel result = new JPanel(new BorderLayout());
         result.setBorder(CommonGuiComponent.marginBorder);
-
-        JButton startTestButton = new JButton("Запустить тестирование");
-        startTestButton.setFont(CommonGuiComponent.createFunctionalFont());
-        result.add(startTestButton, BorderLayout.SOUTH);
+        CommonGuiComponent.startTestButton.setFont(CommonGuiComponent.createFunctionalFont());
+        result.add(CommonGuiComponent.startTestButton, BorderLayout.SOUTH);
         return result;
     }
 }

@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * Настройки мутационных преобразований
@@ -16,6 +16,29 @@ public class MutationOption {
 
     private MutationType type;
 
-    private Map<String, String> options;
+    private Set<Integer> rowNumbers;
+
+    private Map<String, String> replaceOptions;
+
+    public void putReplaceOption(String key, String value) {
+        if (replaceOptions == null) {
+            replaceOptions = new HashMap<>();
+        }
+        replaceOptions.put(key, value);
+    }
+
+    public void addRowNumber(Integer number) {
+        if (rowNumbers == null) {
+            rowNumbers = new HashSet<>();
+        }
+        rowNumbers.add(number);
+    }
+
+    public void addRowNumbers(List<Integer> numbers) {
+        if (rowNumbers == null) {
+            rowNumbers = new HashSet<>();
+        }
+        rowNumbers.addAll(numbers);
+    }
 
 }

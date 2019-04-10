@@ -11,6 +11,29 @@ import java.awt.*;
  */
 public class CommonGuiComponent {
 
+
+    public static JCheckBox removeRowsCheckBox = new JCheckBox("Удаление строк");
+
+    public static JCheckBox revertIfCheckBox = new JCheckBox("Отрицание условных операторов");
+
+    public static JCheckBox replaceRowsCheckBox = new JCheckBox("Подмена знаков");
+
+    public static JTextField removeRowNumbersTextField = new JTextField();
+
+    public static JTextField replacedCharTextField = new JTextField();
+
+    public static JTextField replaceToCharTextField = new JTextField();
+
+    public static JEditorPane sourceCodeEditorPane = new JEditorPane();
+
+    public static JEditorPane testCodeEditorPane = new JEditorPane();
+
+    public static JButton startTestButton = new JButton("Запустить тестирование");
+
+    public static JEditorPane resultEditorPane = new JEditorPane();
+
+
+
     /**
      * Ширина экрана в px
      */
@@ -39,8 +62,8 @@ public class CommonGuiComponent {
     /**
      * Создание панели заголовка
      *
-     * @param titleText текст заголовка
-     * @param textLayout    расположение текста заголовка из BorderLayout
+     * @param titleText  текст заголовка
+     * @param textLayout расположение текста заголовка из BorderLayout
      * @return панель заголовка с текстом
      */
     public static JPanel createTitlePanel(String titleText, String textLayout) {
@@ -105,8 +128,7 @@ public class CommonGuiComponent {
      *
      * @return панель редактирования кода
      */
-    public static JScrollPane createCodeEditorPanel() {
-        JEditorPane editorPane = new JEditorPane();
+    public static JScrollPane createCodeScrollEditorPanel(JEditorPane editorPane) {
         editorPane.setEditable(true);
         editorPane.setBorder(visibleLineBorder);
         JScrollPane result = new JScrollPane(editorPane);

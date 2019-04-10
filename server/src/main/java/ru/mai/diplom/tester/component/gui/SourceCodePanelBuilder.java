@@ -17,7 +17,7 @@ public class SourceCodePanelBuilder implements GuiPanelBuilderInterface {
         JPanel result = new JPanel(new BorderLayout());
         result.setBorder(CommonGuiComponent.marginBorder);
         result.add(CommonGuiComponent.createTitlePanel("Исходный код для тестирования", BorderLayout.WEST), BorderLayout.NORTH);
-        JScrollPane codeEditorPanel = CommonGuiComponent.createCodeEditorPanel();
+        JScrollPane codeEditorPanel = CommonGuiComponent.createCodeScrollEditorPanel(CommonGuiComponent.sourceCodeEditorPane);
         result.add(codeEditorPanel, BorderLayout.CENTER);
         result.setVisible(true);
         return result;

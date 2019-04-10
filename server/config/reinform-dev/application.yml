@@ -18,14 +18,16 @@ endpoints:
 
 spring:
     datasource:
-        url: jdbc:postgresql://localhost:5432/tester
+        url: jdbc:postgresql://localhost:5432/tester?currentSchema=tester
         username: postgres
         password: admin
         type: com.zaxxer.hikari.HikariDataSource
     jpa:
         database-platform: org.hibernate.dialect.PostgresPlusDialect
-        
-#настройки приложения
-app:
-    key1:
-    key2:
+        properties:
+          hibernate:
+            temp:
+              use_jdbc_metadata_defaults: false
+    liquibase:
+        default-schema: tester
+        change-log: classpath:db/liquibase-changelog.xml

@@ -16,7 +16,7 @@ logging:
                 TomcatEmbeddedServletContainer: debug
 spring:
     datasource:
-        url: jdbc:postgresql://localhost:5432/tester??currentSchema=tester
+        url: jdbc:postgresql://localhost:5432/tester?currentSchema=tester
         username: postgres
         password: admin
         type: com.zaxxer.hikari.HikariDataSource

@@ -18,4 +18,6 @@ public interface SourceCodeDataDao extends JpaRepository<SourceCodeData, Long>, 
 
     @Query(value = "SELECT nextval('SOURCE_CODE_DATA_SEQ')", nativeQuery = true)
     long getNextSourceCodeId();
+
+    Optional<SourceCodeData> findByMd5Data(String md5Data);
 }
