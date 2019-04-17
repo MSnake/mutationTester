@@ -61,4 +61,22 @@ public class TestResultDataService {
         return dao.getOne(id);
     }
 
+    public void runTest(TestResultData testResultData){
+        int a = 0;
+        int b = 1;
+        int c = 2;
+        if (true && (a==b)) {
+            // что то написать;
+            a=b+1;
+        }
+        if (true && (a==b)) a=b+1;
+        if (true && (a==b) &&
+                (c < a)) a=b+1;
+        c=0;
+        if (true && (a==b) &&
+                (c < a)) {
+            a=b+1;
+        }
+    }
+
 }
