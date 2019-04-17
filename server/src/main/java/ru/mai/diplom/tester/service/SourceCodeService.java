@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mai.diplom.tester.db.dao.SourceCodeDataDao;
-import ru.mai.diplom.tester.db.model.MutationData;
 import ru.mai.diplom.tester.db.model.SourceCodeData;
 import ru.mai.diplom.tester.utils.DigestUtils;
 
@@ -18,18 +17,27 @@ import java.util.Optional;
 @Service
 public class SourceCodeService {
 
+    /**
+     * Дао для работы с информацией об исходном коде
+     */
     @Autowired
-    SourceCodeDataDao dao;
+    private SourceCodeDataDao dao;
 
-    public SourceCodeData createSourceCodeData(@NonNull String codeText) {
+    /**
+     * Сформировать обьект с информацией об исходном коде
+     *
+     * @param sourceCodeText исходный код
+     * @return обьект с информацией об исходном коде
+     */
+    public SourceCodeData createSourceCodeData(@NonNull String sourceCodeText) {
         SourceCodeData data = null;
-        String md5 = DigestUtils.getMd5(codeText);
+        String md5 = DigestUtils.getMd5(sourceCodeText);
         Optional<SourceCodeData> byMd5Data = findByMd5Data(md5);
         if (byMd5Data.isPresent()) {
             data = byMd5Data.get();
         } else {
             data = new SourceCodeData();
-            data.setCodeText(codeText);
+            data.setCodeText(sourceCodeText);
             data.setMd5Data(md5);
         }
         return data;
@@ -56,7 +64,7 @@ public class SourceCodeService {
         return dao.getOne(id);
     }
 
-    private long getNextId(){
+    public long getNextId() {
         return dao.getNextSourceCodeId();
     }
 }

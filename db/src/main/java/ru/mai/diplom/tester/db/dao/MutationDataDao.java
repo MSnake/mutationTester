@@ -9,7 +9,7 @@ import ru.mai.diplom.tester.db.model.MutationData;
 import java.util.Optional;
 
 /**
- * Репозиторий для работы со списком с информацией о преобразованиях
+ * Репозиторий для работы с информацией о преобразованиях
  */
 @Repository
 public interface MutationDataDao extends JpaRepository<MutationData, Long>, JpaSpecificationExecutor<MutationData> {

@@ -4,10 +4,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mai.diplom.tester.db.dao.SourceCodeDataDao;
 import ru.mai.diplom.tester.db.dao.TestCodeDataDao;
-import ru.mai.diplom.tester.db.model.MutationData;
-import ru.mai.diplom.tester.db.model.SourceCodeData;
 import ru.mai.diplom.tester.db.model.TestCodeData;
 import ru.mai.diplom.tester.utils.DigestUtils;
 
@@ -20,12 +17,24 @@ import java.util.Optional;
 @Service
 public class TestCodeService {
 
+    /**
+     * Дао для работы с кодом тестирования
+     */
     @Autowired
-    TestCodeDataDao dao;
+    private TestCodeDataDao dao;
 
+    /**
+     * Сервис для работы с результатами тестирования
+     */
     @Autowired
-    TestResultDataService testResultDataService;
+    private TestResultDataService testResultDataService;
 
+    /**
+     * Сформировать обьект с информацией о коде тестирования
+     *
+     * @param codeText код тестирования
+     * @return обьект с информацией о коде тестирования
+     */
     public TestCodeData createTestCodeData(@NonNull String codeText) {
         TestCodeData data = null;
         String md5 = DigestUtils.getMd5(codeText);

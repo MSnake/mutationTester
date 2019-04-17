@@ -19,9 +19,19 @@ import java.util.Optional;
 @Service
 public class TestResultDataService {
 
+    /**
+     * Дао для работы с результатами тестирования
+     */
     @Autowired
-    TestResultDataDao dao;
+    private TestResultDataDao dao;
 
+    /**
+     * Сформировать обьект с информацией о результате тестирования
+     *
+     * @param testCodeData информация о коде тестирования
+     * @param mutationData информация о преобразованиях
+     * @return обьект с информацией о результате тестирования
+     */
     public TestResultData createTestResultData(@NonNull TestCodeData testCodeData, @NonNull MutationData mutationData) {
         TestResultData data = new TestResultData();
         data.setTestCodeData(testCodeData);
@@ -61,22 +71,8 @@ public class TestResultDataService {
         return dao.getOne(id);
     }
 
-    public void runTest(TestResultData testResultData){
-        int a = 0;
-        int b = 1;
-        int c = 2;
-        if (true && (a==b)) {
-            // что то написать;
-            a=b+1;
-        }
-        if (true && (a==b)) a=b+1;
-        if (true && (a==b) &&
-                (c < a)) a=b+1;
-        c=0;
-        if (true && (a==b) &&
-                (c < a)) {
-            a=b+1;
-        }
+    public void runTest(TestResultData testResultData) {
+        //TODO Старт тестирования
     }
 
 }
