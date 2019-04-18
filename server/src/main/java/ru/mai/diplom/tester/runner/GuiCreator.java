@@ -3,6 +3,7 @@ package ru.mai.diplom.tester.runner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.mai.diplom.tester.component.CommonGuiComponent;
+import ru.mai.diplom.tester.component.actionlistener.SaveTestButtonListener;
 import ru.mai.diplom.tester.component.actionlistener.StartTestButtonListener;
 import ru.mai.diplom.tester.component.gui.*;
 
@@ -27,6 +28,10 @@ public class GuiCreator {
     @Autowired
     private StartTestButtonListener startTestButtonListener;
 
+    @Autowired
+    private SaveTestButtonListener saveTestButtonListener;
+
+
     public void build() {
         JFrame mainFrame = createMainFrame();
         JPanel mainPanel = createMainPanel();
@@ -39,6 +44,7 @@ public class GuiCreator {
         mainFrame.setVisible(true);
 
         CommonGuiComponent.startTestButton.addActionListener(startTestButtonListener);
+        CommonGuiComponent.saveTestButton.addActionListener(saveTestButtonListener);
     }
 
     private JFrame createMainFrame() {

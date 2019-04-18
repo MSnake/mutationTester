@@ -78,6 +78,15 @@ public class StringToClazzUtils {
         compileClass(packageName, className, classBody);
         return loadClass(packageName + (packageName.isEmpty() ? "" : ".") + className);
     }
+    /**
+     * load String as Class file
+     */
+    public static Class<?> load(String classBody, String packageName) throws IOException {
+        String className = parseClassName(classBody);
+        compileClass(packageName, className, classBody);
+        return loadClass(packageName + (packageName.isEmpty() ? "" : ".") + className);
+    }
+
 
     /**
      * parse package name

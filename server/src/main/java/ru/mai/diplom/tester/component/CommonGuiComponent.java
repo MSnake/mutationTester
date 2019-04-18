@@ -28,6 +28,8 @@ public class CommonGuiComponent {
 
     public static JEditorPane testCodeEditorPane = new JEditorPane();
 
+    public static JButton saveTestButton = new JButton("Сохранить тестирование");
+
     public static JButton startTestButton = new JButton("Запустить тестирование");
 
     public static JEditorPane resultEditorPane = new JEditorPane();

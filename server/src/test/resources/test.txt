@@ -1,0 +1,33 @@
+package ru.mai.diplom.tester.utils;
+
+/**
+ * Created by Alex on 17.02.2019.
+ */
+public class Multiply {
+
+    public Long multiply(Long a, Long b) {
+        Long result = null;
+        if (a < b) result = a * b;
+        if (a > b) result = a + b;
+        return result;
+    }
+}
+
+package ru.mai.diplom.tester.utils;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+/**
+ * Created by Alex on 17.02.2019.
+ */
+public class MultiplyTest {
+    @Test
+    public void multiply() throws Exception {
+        Multiply multiply = new Multiply();
+        Long result = multiply.multiply(1l, 2l);
+        Assert.assertEquals(2l, result.longValue());
+    }
+
+
+}

@@ -13,15 +13,23 @@ public class StringToClazzUtilsTest {
     @Test
     public void loadClassFromStringTest(){
         try {
-            Class newClass = StringToClazzUtils.load("package org.my.test;\r\n" +
+            Class newClass = StringToClazzUtils.load("package ru.mai.diplom.tester.utils;\n" +
+                    "\n" +
+                    "/**\n" +
+                    " * Created by Alex on 17.02.2019.\n" +
+                    " */\n" +
                     "public class Multiply {\n" +
                     "\n" +
                     "    public Long multiply(Long a, Long b) {\n" +
-                    "        return  a*b;\n" +
+                    "        Long result = null;\n" +
+                    "        if (a < b) result = a * b;\n" +
+                    "        if (a > b) result = a + b;\n" +
+                    "        return result;\n" +
                     "    }\n" +
                     "}");
             Assert.assertNotNull(newClass);
-            Class testClass = StringToClazzUtils.load("package org.my.test;\n" +
+            Class testClass = StringToClazzUtils.load("package ru.mai.diplom.tester.utils;\n" +
+                    "\n" +
                     "import org.junit.Assert;\n" +
                     "import org.junit.Test;\n" +
                     "\n" +
@@ -32,8 +40,8 @@ public class StringToClazzUtilsTest {
                     "    @Test\n" +
                     "    public void multiply() throws Exception {\n" +
                     "        Multiply multiply = new Multiply();\n" +
-                    "        Long result = multiply.multiply(1l, 2l);\n" +
-                    "        Assert.assertEquals(5l, result.longValue());\n" +
+                    "        Long result = multiply.multiply(55l, 2l);\n" +
+                    "        Assert.assertEquals(2l, result.longValue());\n" +
                     "    }\n" +
                     "\n" +
                     "\n" +
