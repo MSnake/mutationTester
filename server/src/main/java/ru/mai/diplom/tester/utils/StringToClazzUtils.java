@@ -15,11 +15,11 @@ import java.util.Arrays;
 public class StringToClazzUtils {
 
     /**
-     * compile class
+     * Компиляция класса
      *
-     * @param packageName - package name
-     * @param className   - class name
-     * @param classBody   - content of class
+     * @param packageName имя пакета
+     * @param className   имя класса
+     * @param classBody   содержимое класса
      */
     private static void compileClass(String packageName, String className,
                                      String classBody) throws IOException {
@@ -31,7 +31,7 @@ public class StringToClazzUtils {
 
         path = absSrcPath + File.separator + path;
 
-        // create sub-directories and the source file
+        // формирование древовидной структуры папок(аналог формирования пакетов)
         String dirName = absSrcPath;
         for (String subdirName : packageName.split("\\.")) {
             dirName += File.separator + subdirName.trim();
@@ -40,6 +40,7 @@ public class StringToClazzUtils {
                 dir.mkdirs();
             }
         }
+        // Формирование временного файла класса с исходным кодом
         File sourceFile = new File(path + File.separator + className + ".java");
         sourceFile.createNewFile();
 
@@ -53,7 +54,7 @@ public class StringToClazzUtils {
 
         fileManager.setLocation(StandardLocation.SOURCE_PATH,
                 Arrays.asList(new File("" + StandardLocation.SOURCE_PATH)));
-        // Compile the file
+        // компиляция файла
         jCompiler.getTask(
                 null,
                 fileManager,
@@ -64,13 +65,15 @@ public class StringToClazzUtils {
                         .asList(sourceFile))).call();
         fileManager.close();
 
-        // delete the source file
+        // удаление временного фалйа класса с исходным кодом
         sourceFile.deleteOnExit();
 
     }
 
     /**
-     * load String as Class file
+     * Загрузка класса из строки
+     *
+     * @param classBody строка с содержимым класса
      */
     public static Class<?> load(String classBody) throws IOException {
         String className = parseClassName(classBody);
@@ -78,8 +81,12 @@ public class StringToClazzUtils {
         compileClass(packageName, className, classBody);
         return loadClass(packageName + (packageName.isEmpty() ? "" : ".") + className);
     }
+
     /**
-     * load String as Class file
+     * Загрузка класса из строки с указанным именем пакета
+     *
+     * @param classBody   строка с содержимым класса
+     * @param packageName название пакета
      */
     public static Class<?> load(String classBody, String packageName) throws IOException {
         String className = parseClassName(classBody);
@@ -89,7 +96,9 @@ public class StringToClazzUtils {
 
 
     /**
-     * parse package name
+     * Получение имени пакета из стоки исходного кода класса
+     *
+     * @param classBody строка с содержимым класса
      */
     private static String parsePackageName(String classBody) {
         String pkgName = "";
@@ -104,7 +113,9 @@ public class StringToClazzUtils {
     }
 
     /**
-     * parse class name
+     * Получение имени класса из стоки исходного кода класса
+     *
+     * @param classBody строка с содержимым класса
      */
     private static String parseClassName(String classBody) {
         String className = null;
@@ -121,7 +132,9 @@ public class StringToClazzUtils {
     }
 
     /**
-     * load named class by class loader
+     * Получение экземпляра скомпилированного класса из контекста приложения
+     *
+     * @param className название класса
      */
     private static Class<?> loadClass(String className) {
         try {

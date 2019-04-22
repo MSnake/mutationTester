@@ -11,10 +11,7 @@ import ru.mai.diplom.tester.db.model.TestCodeData;
 import ru.mai.diplom.tester.db.model.TestResultData;
 import ru.mai.diplom.tester.model.MutationOption;
 import ru.mai.diplom.tester.model.MutationType;
-import ru.mai.diplom.tester.service.MutationService;
-import ru.mai.diplom.tester.service.SourceCodeService;
-import ru.mai.diplom.tester.service.TestCodeService;
-import ru.mai.diplom.tester.service.TestResultDataService;
+import ru.mai.diplom.tester.service.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -30,6 +27,16 @@ import java.util.stream.Collectors;
 @Transactional(Transactional.TxType.REQUIRES_NEW)
 public class CommonUI {
 
+    /**
+     * REGEX переход на новую строку
+     */
+    private final String NEW_ROW_REGEX = "\\r?\\n";
+
+    /**
+     * REGEX переход на новую строку
+     */
+    private final String NEW_LINE = "\n";
+
     @Autowired
     private SourceCodeService sourceCodeService;
 
@@ -41,6 +48,9 @@ public class CommonUI {
 
     @Autowired
     private TestResultDataService testResultDataService;
+
+    @Autowired
+    private TestRunnerService testRunnerService;
 
     public List<MutationOption> createMutationOptions() {
         List<MutationOption> result = new ArrayList<>();
@@ -102,8 +112,26 @@ public class CommonUI {
     }
 
     @Async
-    public void runTest(TestResultData data){
-        TestResultData testResult = testResultDataService.runTest(data);
-        // TODO выод резултатов на форму
+    public void runTest(TestResultData data) {
+        TestResultData testResult = testRunnerService.runTest(data);
+        createResultTestInfo(testResult);
+    }
+
+    private void createResultTestInfo(TestResultData testResult) {
+        CommonGuiComponent.resultEditorPane.append("***************************************************************************************");
+        CommonGuiComponent.resultEditorPane.append(NEW_LINE);
+        CommonGuiComponent.resultEditorPane.append("Тестирование завершено");
+        CommonGuiComponent.resultEditorPane.append(NEW_LINE);
+        CommonGuiComponent.resultEditorPane.append("Статус проведенного теста: " + testResult.getStatus().name());
+        CommonGuiComponent.resultEditorPane.append(NEW_LINE);
+        CommonGuiComponent.resultEditorPane.append("Заключение о проведенном тесте: ->");
+        CommonGuiComponent.resultEditorPane.append(NEW_LINE);
+        String[] split = testResult.getResultText().split(System.lineSeparator());
+        for (int i = 0; i < split.length; i++) {
+            CommonGuiComponent.resultEditorPane.append("                                  ");
+            CommonGuiComponent.resultEditorPane.append(split[i]);
+            CommonGuiComponent.resultEditorPane.append(NEW_LINE);
+
+        }
     }
 }

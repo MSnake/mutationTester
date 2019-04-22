@@ -76,32 +76,4 @@ public class TestResultDataService {
         return dao.getOne(id);
     }
 
-    public TestResultData runTest(TestResultData testResultData) {
-        TestResultData result = testResultData;
-        try {
-            result.setStatus(TestResultStatusType.PROCESSED);
-            save(result);
-            Class mutatedClass = StringToClazzUtils.load(testResultData.getMutationData().getCodeText());
-            Class testedClass = StringToClazzUtils.load(testResultData.getTestCodeData().getCodeText());
-            Result resultTest = JUnitCore.runClasses(testedClass);
-            StringBuilder resultTestStringBuilder = new StringBuilder();
-            if (!resultTest.getFailures().isEmpty()) {
-                String newRow = "\\r?\\n";
-                resultTestStringBuilder.append("Тест не пройден. Детали: ");
-                for (Failure failure : resultTest.getFailures()) {
-                    resultTestStringBuilder.append(newRow);
-                    resultTestStringBuilder.append(failure.getMessage());
-                }
-                result.setStatus(TestResultStatusType.ERROR);
-            } else {
-                result.setStatus(TestResultStatusType.SUCCESS);
-                resultTestStringBuilder.append("Тест успешно пройден.");
-            }
-            result.setResultText(resultTestStringBuilder.toString());
-            return save(result);
-        } catch (IOException e) {
-            throw new RuntimeException("Cant generate classes from sources: mutated code data and test code data. Details: " + e.getMessage());
-        }
-    }
-
 }

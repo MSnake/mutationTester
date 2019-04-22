@@ -17,7 +17,7 @@ public class MutationOptionPanelBuilder implements GuiPanelBuilderInterface {
     @Override
     public JPanel build() {
         JPanel result = new JPanel(new BorderLayout());
-        JPanel titlePanel = CommonGuiComponent.createTitlePanel("Мутационные преобразования", BorderLayout.CENTER);
+        JPanel titlePanel = CommonGuiComponent.createTitlePanel("Мутационные преобразования", BorderLayout.CENTER, CommonGuiComponent.createTitleFont());
         result.add(titlePanel, BorderLayout.NORTH);
         result.add(createOptionPanel(), BorderLayout.CENTER);
         return result;
@@ -25,13 +25,12 @@ public class MutationOptionPanelBuilder implements GuiPanelBuilderInterface {
 
     private JPanel createOptionPanel() {
         JPanel result = new JPanel();
-        LayoutManager layout = new GridLayout(3, 1, 3, 3);
+//        LayoutManager layout = new GridLayout(3, 1, 1, 1);
+        LayoutManager layout = new BoxLayout(result, BoxLayout.Y_AXIS);
         result.setLayout(layout);
 
         JPanel removeRowsPanel = createRemoveRowsPanel();
-
         JPanel revertPanel = createRevertRowsPanel();
-
         JPanel replacePanel = createReplaceRowsPanel();
 
         result.add(removeRowsPanel);

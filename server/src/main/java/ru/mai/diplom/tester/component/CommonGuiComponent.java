@@ -24,16 +24,15 @@ public class CommonGuiComponent {
 
     public static JTextField replaceToCharTextField = new JTextField();
 
-    public static JEditorPane sourceCodeEditorPane = new JEditorPane();
+    public static JTextArea sourceCodeEditorPane = new JTextArea();
 
-    public static JEditorPane testCodeEditorPane = new JEditorPane();
+    public static JTextArea testCodeEditorPane = new JTextArea();
 
-    public static JButton saveTestButton = new JButton("Сохранить тестирование");
+    public static JButton saveTestButton = new JButton("Сохранить тест");
 
-    public static JButton startTestButton = new JButton("Запустить тестирование");
+    public static JButton startTestButton = new JButton("Запустить тест");
 
-    public static JEditorPane resultEditorPane = new JEditorPane();
-
+    public static JTextArea resultEditorPane = new JTextArea();
 
 
     /**
@@ -45,6 +44,16 @@ public class CommonGuiComponent {
      * Высота экрана в px
      */
     public static Integer screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
+
+    /**
+     * Ширина графического интерфейса приложения по умолчанию
+     */
+    public static Integer appDefaultWidth = 1024;
+
+    /**
+     * Высота графического интерфейса приложения по умолчанию
+     */
+    public static Integer appDefaultHeight = 768;
 
     /**
      * Видимая граница из линии
@@ -68,14 +77,14 @@ public class CommonGuiComponent {
      * @param textLayout расположение текста заголовка из BorderLayout
      * @return панель заголовка с текстом
      */
-    public static JPanel createTitlePanel(String titleText, String textLayout) {
+    public static JPanel createTitlePanel(String titleText, String textLayout, Font font) {
         JPanel result = new JPanel();
         LayoutManager layout = new BorderLayout();
         result.setLayout(layout);
-        result.setAlignmentX(50f);
-        result.setAlignmentY(50f);
+        result.setAlignmentX(25f);
+        result.setAlignmentY(25f);
         JLabel title = new JLabel(titleText);
-        title.setFont(createTitleFont());
+        title.setFont(font);
         result.add(title, textLayout);
         return result;
     }
@@ -90,12 +99,21 @@ public class CommonGuiComponent {
     }
 
     /**
+     * Создание стиля для текста второстепенного заголовка
+     *
+     * @return стиль текста второстепенного заголовка
+     */
+    public static Font createSubTitleFont() {
+        return new Font(GUI_FONT_NAME, Font.ITALIC, 20);
+    }
+
+    /**
      * Создание стиля для текста функий
      *
      * @return стиль текста функий
      */
     public static Font createFunctionalFont() {
-        return new Font(GUI_FONT_NAME, Font.BOLD + Font.ITALIC, 24);
+        return new Font(GUI_FONT_NAME, Font.BOLD + Font.ITALIC, 20);
     }
 
     /**
@@ -130,12 +148,28 @@ public class CommonGuiComponent {
      *
      * @return панель редактирования кода
      */
-    public static JScrollPane createCodeScrollEditorPanel(JEditorPane editorPane) {
+    public static JScrollPane createCodeScrollEditorPanel(JTextArea editorPane) {
         editorPane.setEditable(true);
         editorPane.setBorder(visibleLineBorder);
         JScrollPane result = new JScrollPane(editorPane);
         result.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        result.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        result.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//        TextLineN tln = new TextLineNumber(textPane);
+//        JScrollPane.setRowHeaderView(tln);
+        return result;
+    }
+
+    /**
+     * Создание панели вывода результатов
+     *
+     * @return панель вывода результатов
+     */
+    public static JScrollPane createLogScrollEditorPanel(JTextArea editorPane) {
+        editorPane.setEditable(false);
+        editorPane.setBorder(visibleLineBorder);
+        JScrollPane result = new JScrollPane(editorPane);
+        result.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        result.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 //        TextLineN tln = new TextLineNumber(textPane);
 //        JScrollPane.setRowHeaderView(tln);
         return result;
