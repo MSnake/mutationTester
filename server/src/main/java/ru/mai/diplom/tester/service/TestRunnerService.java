@@ -47,15 +47,17 @@ public class TestRunnerService {
                     resultTestStringBuilder.append(System.lineSeparator() + " ");
                     resultTestStringBuilder.append(failure.getMessage());
                 }
-                result.setStatus(TestResultStatusType.ERROR);
+                result.setStatus(TestResultStatusType.DONE);
             } else {
                 result.setStatus(TestResultStatusType.SUCCESS);
                 resultTestStringBuilder.append("Тест успешно пройден.");
             }
             result.setResultText(resultTestStringBuilder.toString());
-            return testResultDataService.save(result);
-        } catch (IOException e) {
-            throw new RuntimeException("Cant generate classes from sources: mutated code data and test code data. Details: " + e.getMessage());
+        } catch (IOException|RuntimeException e ) {
+            result.setStatus(TestResultStatusType.ERROR);
+            result.setResultText(e.getMessage());
+            log.error("Cant generate classes from sources: mutated code data and test code data. Details: " + e.getMessage());
         }
+        return testResultDataService.save(result);
     }
 }

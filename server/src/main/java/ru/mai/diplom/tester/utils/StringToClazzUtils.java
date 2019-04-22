@@ -1,5 +1,7 @@
 package ru.mai.diplom.tester.utils;
 
+import org.springframework.util.StringUtils;
+
 import javax.tools.JavaCompiler;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
@@ -7,6 +9,7 @@ import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Arrays;
 
 /**
@@ -21,8 +24,8 @@ public class StringToClazzUtils {
      * @param className   имя класса
      * @param classBody   содержимое класса
      */
-    private static void compileClass(String packageName, String className,
-                                     String classBody) throws IOException {
+    private static String compileClass(String packageName, String className,
+                                       String classBody) throws IOException {
         String path = packageName;
         path = path.replace(".", File.separator);
 
@@ -55,8 +58,9 @@ public class StringToClazzUtils {
         fileManager.setLocation(StandardLocation.SOURCE_PATH,
                 Arrays.asList(new File("" + StandardLocation.SOURCE_PATH)));
         // компиляция файла
+        StringWriter out = new StringWriter();
         jCompiler.getTask(
-                null,
+                out,
                 fileManager,
                 null,
                 null,
@@ -67,6 +71,8 @@ public class StringToClazzUtils {
 
         // удаление временного фалйа класса с исходным кодом
         sourceFile.deleteOnExit();
+        StringBuffer sb = out.getBuffer();
+        return sb.toString();
 
     }
 
@@ -78,7 +84,8 @@ public class StringToClazzUtils {
     public static Class<?> load(String classBody) throws IOException {
         String className = parseClassName(classBody);
         String packageName = parsePackageName(classBody);
-        compileClass(packageName, className, classBody);
+        String errors = compileClass(packageName, className, classBody);
+        if (StringUtils.hasText(errors)) throw new RuntimeException(errors);
         return loadClass(packageName + (packageName.isEmpty() ? "" : ".") + className);
     }
 
@@ -90,7 +97,8 @@ public class StringToClazzUtils {
      */
     public static Class<?> load(String classBody, String packageName) throws IOException {
         String className = parseClassName(classBody);
-        compileClass(packageName, className, classBody);
+        String errors = compileClass(packageName, className, classBody);
+        if (StringUtils.hasText(errors)) throw new RuntimeException(errors);
         return loadClass(packageName + (packageName.isEmpty() ? "" : ".") + className);
     }
 

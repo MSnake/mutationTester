@@ -131,7 +131,6 @@ public class CommonUI {
             CommonGuiComponent.resultEditorPane.append("                                  ");
             CommonGuiComponent.resultEditorPane.append(split[i]);
             CommonGuiComponent.resultEditorPane.append(NEW_LINE);
-
         }
     }
 }
