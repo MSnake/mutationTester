@@ -12,19 +12,28 @@ import java.awt.*;
 @Component
 public class SourceCodePanelBuilder implements GuiPanelBuilderInterface {
 
+    private final CommonGuiComponent guiComponent;
+
+    public SourceCodePanelBuilder(CommonGuiComponent guiComponent){
+        this.guiComponent = guiComponent;
+    }
+
     @Override
     public JPanel build() {
         JPanel result = new JPanel(new BorderLayout());
         JPanel sourceCodePanel = new JPanel(new BorderLayout());
+        JPanel titleSourceCodePanel = CommonGuiComponent.createTitlePanel("Исходный код для тестирования", BorderLayout.WEST, CommonGuiComponent.createTitleFont());
+        // TODO
+        //titleSourceCodePanel.add(CommonGuiComponent.creteNameComboBoxPanel(guiComponent.testNameComboBox), BorderLayout.EAST);
         sourceCodePanel.setBorder(CommonGuiComponent.marginBorder);
-        JScrollPane codeEditorPanel = CommonGuiComponent.createCodeScrollEditorPanel(CommonGuiComponent.sourceCodeEditorPane);
-        sourceCodePanel.add(CommonGuiComponent.createTitlePanel("Исходный код для тестирования", BorderLayout.WEST,  CommonGuiComponent.createTitleFont()), BorderLayout.NORTH);
+        JScrollPane codeEditorPanel = CommonGuiComponent.createCodeScrollEditorPanel(CommonGuiComponent.sourceCodeEditorTextPane);
+        sourceCodePanel.add(titleSourceCodePanel, BorderLayout.NORTH);
         sourceCodePanel.add(codeEditorPanel, BorderLayout.CENTER);
         sourceCodePanel.setPreferredSize(new Dimension(0, 450));
 
         JPanel logPanel = new JPanel(new BorderLayout());
         logPanel.setBorder(CommonGuiComponent.marginBorder);
-        logPanel.add(CommonGuiComponent.createTitlePanel("Результат тестирования", BorderLayout.WEST,  CommonGuiComponent.createSubTitleFont()), BorderLayout.NORTH);
+        logPanel.add(CommonGuiComponent.createTitlePanel("Результат тестирования", BorderLayout.WEST, CommonGuiComponent.createSubTitleFont()), BorderLayout.NORTH);
         JScrollPane resultEditorPanel = CommonGuiComponent.createLogScrollEditorPanel(CommonGuiComponent.resultEditorPane);
         logPanel.add(resultEditorPanel, BorderLayout.CENTER);
 
@@ -33,4 +42,5 @@ public class SourceCodePanelBuilder implements GuiPanelBuilderInterface {
         result.setVisible(true);
         return result;
     }
+
 }

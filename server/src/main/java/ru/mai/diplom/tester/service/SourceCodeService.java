@@ -8,6 +8,7 @@ import ru.mai.diplom.tester.db.dao.SourceCodeDataDao;
 import ru.mai.diplom.tester.db.model.SourceCodeData;
 import ru.mai.diplom.tester.utils.DigestUtils;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 /**
@@ -43,6 +44,7 @@ public class SourceCodeService {
         return data;
     }
 
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SourceCodeData save(@NonNull SourceCodeData sourceCodeData) {
         return dao.saveAndFlush(sourceCodeData);
     }

@@ -1,6 +1,6 @@
 package ru.mai.diplom.tester.component.actionlistener;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sun.tools.internal.ws.wsdl.framework.ValidationException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -13,6 +13,7 @@ import ru.mai.diplom.tester.model.MutationOption;
 import ru.mai.diplom.tester.model.MutationType;
 import ru.mai.diplom.tester.service.*;
 
+import javax.swing.*;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,27 +31,25 @@ public class CommonUI {
     /**
      * REGEX переход на новую строку
      */
-    private final String NEW_ROW_REGEX = "\\r?\\n";
-
-    /**
-     * REGEX переход на новую строку
-     */
     private final String NEW_LINE = "\n";
 
-    @Autowired
-    private SourceCodeService sourceCodeService;
+    private final SourceCodeService sourceCodeService;
+    private final TestCodeService testCodeService;
+    private final MutationService mutationService;
+    private final TestResultDataService testResultDataService;
+    private final TestRunnerService testRunnerService;
+    private final CommonGuiComponent guiComponent;
 
-    @Autowired
-    private TestCodeService testCodeService;
+    public CommonUI(SourceCodeService sourceCodeService, TestCodeService testCodeService, MutationService mutationService,
+                    TestResultDataService testResultDataService, TestRunnerService testRunnerService, CommonGuiComponent guiComponent) {
+        this.sourceCodeService = sourceCodeService;
+        this.testCodeService = testCodeService;
+        this.mutationService = mutationService;
+        this.testResultDataService = testResultDataService;
+        this.testRunnerService = testRunnerService;
+        this.guiComponent = guiComponent;
 
-    @Autowired
-    private MutationService mutationService;
-
-    @Autowired
-    private TestResultDataService testResultDataService;
-
-    @Autowired
-    private TestRunnerService testRunnerService;
+    }
 
     public List<MutationOption> createMutationOptions() {
         List<MutationOption> result = new ArrayList<>();
@@ -84,21 +83,27 @@ public class CommonUI {
 
     public TestResultData saveDataFromForm() {
         TestResultData result = null;
-        SourceCodeData data = sourceCodeService.createSourceCodeData(CommonGuiComponent.sourceCodeEditorPane.getText());
-        TestCodeData testCodeData = testCodeService.createTestCodeData(CommonGuiComponent.testCodeEditorPane.getText());
+        SourceCodeData data = sourceCodeService.createSourceCodeData(CommonGuiComponent.sourceCodeEditorTextPane.getText());
+        TestCodeData testCodeData = testCodeService.createTestCodeData(CommonGuiComponent.testCodeEditorTextPane.getText());
         MutationData mutationData = mutationService.createMutationData(data.getCodeText(), createMutationOptions());
         if (data.getId() != null) {
             if (data.getTestCodeDataList() != null && !data.getTestCodeDataList().isEmpty()) {
+                TestCodeData finalTestCodeData = testCodeData;
                 Optional<TestCodeData> foundedTest = data.getTestCodeDataList().stream()
-                        .filter(test -> test.getMd5Data().equalsIgnoreCase(testCodeData.getMd5Data())).findAny();
-                if (!foundedTest.isPresent() && testCodeData.getId() == null) {
+                        .filter(test -> test.getMd5Data().equalsIgnoreCase(finalTestCodeData.getMd5Data())).findAny();
+                if (foundedTest.isPresent()) {
+                    testCodeData = foundedTest.get();
+                } else {
                     data.addTestCodeData(testCodeData);
                 }
             }
             if (data.getMutationDataList() != null && !data.getMutationDataList().isEmpty()) {
+                MutationData finalMutationData = mutationData;
                 Optional<MutationData> foundedMutation = data.getMutationDataList().stream()
-                        .filter(mutation -> mutation.getMd5Data().equalsIgnoreCase(mutationData.getMd5Data())).findAny();
-                if (!foundedMutation.isPresent() && mutationData.getId() == null) {
+                        .filter(mutation -> mutation.getMd5Data().equalsIgnoreCase(finalMutationData.getMd5Data())).findAny();
+                if (foundedMutation.isPresent()) {
+                    mutationData = foundedMutation.get();
+                } else {
                     data.addMutationData(mutationData);
                 }
             }
@@ -108,6 +113,22 @@ public class CommonUI {
         }
         sourceCodeService.save(data);
         result = testResultDataService.save(testCodeData, mutationData);
+        // TODO
+//        try {
+//            TestResultData testNameItem = (TestResultData) guiComponent.testNameComboBox.getEditor().getItem();
+//            if (StringUtils.hasText(testNameItem.getTestName())) {
+//                sourceCodeService.save(data);
+//                result = testResultDataService.save(testNameItem.getTestName(), testCodeData, mutationData);
+//            } else {
+//                createLogErrorInfo("Внимание! Информация о тестировании не может быть сохранена в системе, так как отсутствует название тестирования.");
+//            }
+//        } catch (ValidationException ex) {
+//            createLogErrorInfo(ex.getKey());
+//        } catch (Exception ex) {
+//            createLogErrorInfo(ex.getMessage());
+//        }
+//        List<TestResultData> testes = testResultDataService.findAll();
+//        guiComponent.testNameComboBox.setModel(new DefaultComboBoxModel<TestResultData>(testes.toArray(new TestResultData[testes.size()])));
         return result;
     }
 
@@ -129,6 +150,18 @@ public class CommonUI {
         String[] split = testResult.getResultText().split(System.lineSeparator());
         for (int i = 0; i < split.length; i++) {
             CommonGuiComponent.resultEditorPane.append("                                  ");
+            CommonGuiComponent.resultEditorPane.append(split[i]);
+            CommonGuiComponent.resultEditorPane.append(NEW_LINE);
+        }
+    }
+
+    public void createLogErrorInfo(String errorString) {
+        CommonGuiComponent.resultEditorPane.append("***************************************************************************************");
+        CommonGuiComponent.resultEditorPane.append(NEW_LINE);
+        CommonGuiComponent.resultEditorPane.append("Ошибка обработки данных");
+        CommonGuiComponent.resultEditorPane.append(NEW_LINE);
+        String[] split = errorString.split(System.lineSeparator());
+        for (int i = 0; i < split.length; i++) {
             CommonGuiComponent.resultEditorPane.append(split[i]);
             CommonGuiComponent.resultEditorPane.append(NEW_LINE);
         }

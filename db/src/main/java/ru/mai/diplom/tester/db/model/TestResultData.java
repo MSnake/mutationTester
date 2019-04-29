@@ -30,6 +30,15 @@ public class TestResultData {
     @Column(name = "RESULT_TEXT")
     private String resultText;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
     private TestResultStatusType status;
+
+//    @Column(name = "TEST_NAME")
+//    private String testName;
+//
+//    @Override
+//    public String toString() {
+//        return testName;
+//    }
 }

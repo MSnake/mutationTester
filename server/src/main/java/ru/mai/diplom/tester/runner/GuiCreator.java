@@ -13,23 +13,24 @@ import java.awt.*;
 @Component
 public class GuiCreator {
 
-    @Autowired
-    private SourceCodePanelBuilder sourceCodePanelBuilder;
+    private final SourceCodePanelBuilder sourceCodePanelBuilder;
+    private final TestCodePanelBuilder testCodePanelBuilder;
+    private final MutationOptionPanelBuilder mutationOptionPanelBuilder;
+    private final StartTestPanelBuilder startTestPanelBuilder;
+    private final StartTestButtonListener startTestButtonListener;
+    private final SaveTestButtonListener saveTestButtonListener;
 
-    @Autowired
-    private TestCodePanelBuilder testCodePanelBuilder;
+    public GuiCreator(SourceCodePanelBuilder sourceCodePanelBuilder, TestCodePanelBuilder testCodePanelBuilder,
+                      MutationOptionPanelBuilder mutationOptionPanelBuilder, StartTestPanelBuilder startTestPanelBuilder,
+                      StartTestButtonListener startTestButtonListener, SaveTestButtonListener saveTestButtonListener){
+        this.sourceCodePanelBuilder = sourceCodePanelBuilder;
+        this.testCodePanelBuilder = testCodePanelBuilder;
+        this.mutationOptionPanelBuilder = mutationOptionPanelBuilder;
+        this.startTestPanelBuilder = startTestPanelBuilder;
+        this.startTestButtonListener = startTestButtonListener;
+        this.saveTestButtonListener = saveTestButtonListener;
 
-    @Autowired
-    private MutationOptionPanelBuilder mutationOptionPanelBuilder;
-
-    @Autowired
-    private StartTestPanelBuilder startTestPanelBuilder;
-
-    @Autowired
-    private StartTestButtonListener startTestButtonListener;
-
-    @Autowired
-    private SaveTestButtonListener saveTestButtonListener;
+    }
 
 
     public void build() {
@@ -55,7 +56,7 @@ public class GuiCreator {
         result.setPreferredSize(new Dimension(CommonGuiComponent.appDefaultWidth, CommonGuiComponent.appDefaultHeight));
         result.setLocationRelativeTo(null);
         result.setResizable(false);
-        CommonGuiComponent.sourceCodeEditorPane.setText("package ru.mai.diplom.tester.utils;\n" +
+        CommonGuiComponent.sourceCodeEditorTextPane.setText("package ru.mai.diplom.tester.utils;\n" +
                 "\n" +
                 "/**\n" +
                 " * Created by Alex on 17.02.2019.\n" +
@@ -69,7 +70,7 @@ public class GuiCreator {
                 "        return result;\n" +
                 "    }\n" +
                 "}");
-        CommonGuiComponent.testCodeEditorPane.setText("package ru.mai.diplom.tester.utils;\n" +
+        CommonGuiComponent.testCodeEditorTextPane.setText("package ru.mai.diplom.tester.utils;\n" +
                 "\n" +
                 "import org.junit.Assert;\n" +
                 "import org.junit.Test;\n" +

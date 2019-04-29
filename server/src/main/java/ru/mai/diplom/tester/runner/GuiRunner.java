@@ -13,11 +13,6 @@ public class GuiRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
         guiCreator.build();
-//        JFrame mainFrame = createMainFrame();
-//        GUIBuilder gui = new GUIBuilder();
-//        mainFrame.setContentPane(gui.getContentPanel());
-//        mainFrame.setVisible(true);
-//        guiCreatorBuilder.build();
     }
 
 }

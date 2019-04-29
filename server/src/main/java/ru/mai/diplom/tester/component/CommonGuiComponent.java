@@ -1,5 +1,11 @@
 package ru.mai.diplom.tester.component;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.mai.diplom.tester.component.gui.text.TextLineNumber;
+import ru.mai.diplom.tester.component.gui.combobox.JComboBoxFilter;
+
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.EmptyBorder;
@@ -9,7 +15,11 @@ import java.awt.*;
 /**
  * Общие компоненты для построения графического интерфейса
  */
+@Component
 public class CommonGuiComponent {
+
+    @Autowired
+    private JComboBoxFilter jComboBoxFilter;
 
 
     public static JCheckBox removeRowsCheckBox = new JCheckBox("Удаление строк");
@@ -24,15 +34,22 @@ public class CommonGuiComponent {
 
     public static JTextField replaceToCharTextField = new JTextField();
 
-    public static JTextArea sourceCodeEditorPane = new JTextArea();
+    public static JTextPane sourceCodeEditorTextPane = new JTextPane();
 
-    public static JTextArea testCodeEditorPane = new JTextArea();
+    public static JTextPane testCodeEditorTextPane = new JTextPane();
 
     public static JButton saveTestButton = new JButton("Сохранить тест");
 
     public static JButton startTestButton = new JButton("Запустить тест");
 
     public static JTextArea resultEditorPane = new JTextArea();
+
+    public JComboBox testNameComboBox = null;
+
+    @PostConstruct
+    public void init(){
+        testNameComboBox = jComboBoxFilter.createComboBox();
+    }
 
 
     /**
@@ -148,14 +165,16 @@ public class CommonGuiComponent {
      *
      * @return панель редактирования кода
      */
-    public static JScrollPane createCodeScrollEditorPanel(JTextArea editorPane) {
-        editorPane.setEditable(true);
-        editorPane.setBorder(visibleLineBorder);
-        JScrollPane result = new JScrollPane(editorPane);
+    public static JScrollPane createCodeScrollEditorPanel(JTextPane textPane) {
+        JPanel panel = new JPanel(new BorderLayout());
+        textPane.setEditable(true);
+        TextLineNumber tln = new TextLineNumber(textPane);
+        panel.add(tln, BorderLayout.WEST);
+        panel.add(textPane, BorderLayout.CENTER);
+
+        JScrollPane result = new JScrollPane(panel);
         result.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         result.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//        TextLineN tln = new TextLineNumber(textPane);
-//        JScrollPane.setRowHeaderView(tln);
         return result;
     }
 
@@ -166,12 +185,27 @@ public class CommonGuiComponent {
      */
     public static JScrollPane createLogScrollEditorPanel(JTextArea editorPane) {
         editorPane.setEditable(false);
-        editorPane.setBorder(visibleLineBorder);
         JScrollPane result = new JScrollPane(editorPane);
         result.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         result.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//        TextLineN tln = new TextLineNumber(textPane);
-//        JScrollPane.setRowHeaderView(tln);
         return result;
     }
+
+    public static JPanel creteNameComboBoxPanel(JComboBox comboBox){
+        JPanel result = new JPanel(new BorderLayout());
+        result.setPreferredSize(new Dimension(150, 20));
+        comboBox.setEditable(true);
+        comboBox.setSelectedIndex(-1);
+        result.add(comboBox, BorderLayout.CENTER);
+        return result;
+    }
+
+    public static JPanel creteNameJListPanel(JList jList){
+        JPanel result = new JPanel(new BorderLayout());
+        result.setPreferredSize(new Dimension(50, 50));
+        //jList.set(true);
+        result.add(jList, BorderLayout.CENTER);
+        return result;
+    }
+
 }

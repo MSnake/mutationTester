@@ -16,4 +16,6 @@ import java.util.Optional;
 public interface TestResultDataDao extends JpaRepository<TestResultData, Long>, JpaSpecificationExecutor<TestResultData> {
 
     Optional<TestResultData> findByTestCodeDataAndAndMutationData(TestCodeData testCodeData, MutationData mutationData);
+
+    //Optional<TestResultData> findByTestName(String testName);
 }

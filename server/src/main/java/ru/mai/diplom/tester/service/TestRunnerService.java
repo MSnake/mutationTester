@@ -26,6 +26,8 @@ public class TestRunnerService {
     @Autowired
     private TestResultDataService testResultDataService;
 
+    private final String defaultPackage = "ru.mai.diplom.tester.data.temp";
+
     /**
      * Запуск тестирования
      *

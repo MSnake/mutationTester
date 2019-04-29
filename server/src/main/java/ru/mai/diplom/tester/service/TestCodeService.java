@@ -36,16 +36,18 @@ public class TestCodeService {
      * @return обьект с информацией о коде тестирования
      */
     public TestCodeData createTestCodeData(@NonNull String codeText) {
-        TestCodeData data = null;
+        TestCodeData data = new TestCodeData();
         String md5 = DigestUtils.getMd5(codeText);
-        Optional<TestCodeData> byMd5Data = findByMd5Data(md5);
-        if (byMd5Data.isPresent()) {
-            data = byMd5Data.get();
-        } else {
-            data = new TestCodeData();
-            data.setCodeText(codeText);
-            data.setMd5Data(md5);
-        }
+        data.setCodeText(codeText);
+        data.setMd5Data(md5);
+//        Optional<TestCodeData> byMd5Data = findByMd5Data(md5);
+//        if (byMd5Data.isPresent()) {
+//            data = byMd5Data.get();
+//        } else {
+//            data = new TestCodeData();
+//            data.setCodeText(codeText);
+//            data.setMd5Data(md5);
+//        }
         return data;
     }
 

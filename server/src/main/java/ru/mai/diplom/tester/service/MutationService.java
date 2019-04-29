@@ -50,18 +50,21 @@ public class MutationService {
      * @return обьект с информацией о преобразованиях
      */
     public MutationData createMutationData(@NonNull String sourceCodeText, List<MutationOption> options) {
-        MutationData data = null;
+        MutationData data = new MutationData();
         String mutatedCode = createMutationCodeFromSource(sourceCodeText, options);
         String md5 = DigestUtils.getMd5(mutatedCode);
-        Optional<MutationData> byMd5Data = findByMd5Data(md5);
-        if (byMd5Data.isPresent()) {
-            data = byMd5Data.get();
-        } else {
-            data = new MutationData();
-            data.setCodeText(mutatedCode);
-            data.setMd5Data(DigestUtils.getMd5(mutatedCode));
-            data.setJsonData(toJson(options));
-        }
+        data.setCodeText(mutatedCode);
+        data.setMd5Data(DigestUtils.getMd5(mutatedCode));
+        data.setJsonData(toJson(options));
+//        Optional<MutationData> byMd5Data = findByMd5Data(md5);
+//        if (byMd5Data.isPresent()) {
+//            data = byMd5Data.get();
+//        } else {
+//            data = new MutationData();
+//            data.setCodeText(mutatedCode);
+//            data.setMd5Data(DigestUtils.getMd5(mutatedCode));
+//            data.setJsonData(toJson(options));
+//        }
         return data;
     }
 
