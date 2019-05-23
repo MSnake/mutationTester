@@ -25,11 +25,10 @@ import java.util.stream.Collectors;
  * Базовые методы взаимодействия с пользовательским интерфейсом
  */
 @Component
-@Transactional(Transactional.TxType.REQUIRES_NEW)
 public class CommonUI {
 
     /**
-     * REGEX переход на новую строку
+     *  Переход на новую строку
      */
     private final String NEW_LINE = "\n";
 
@@ -106,13 +105,15 @@ public class CommonUI {
                 } else {
                     data.addMutationData(mutationData);
                 }
+            } else {
+                data.addMutationData(mutationData);
             }
         } else {
             data.addTestCodeData(testCodeData);
             data.addMutationData(mutationData);
         }
         sourceCodeService.save(data);
-        result = testResultDataService.save(testCodeData, mutationData);
+        result = testResultDataService.save(testCodeService.findByMd5Data(testCodeData.getMd5Data()).get(), mutationService.findByMd5Data(mutationData.getMd5Data()).get());
         // TODO
 //        try {
 //            TestResultData testNameItem = (TestResultData) guiComponent.testNameComboBox.getEditor().getItem();
@@ -166,4 +167,5 @@ public class CommonUI {
             CommonGuiComponent.resultEditorPane.append(NEW_LINE);
         }
     }
+
 }

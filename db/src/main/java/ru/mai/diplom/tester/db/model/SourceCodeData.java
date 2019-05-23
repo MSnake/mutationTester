@@ -28,10 +28,10 @@ public class SourceCodeData {
     @Column(name = "MD5")
     private String md5Data;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sourceCodeData")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sourceCodeData", fetch = FetchType.EAGER)
     private Set<MutationData> mutationDataList;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sourceCodeData")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sourceCodeData", fetch = FetchType.EAGER)
     private Set<TestCodeData> testCodeDataList;
 
     public void addMutationData(MutationData data) {

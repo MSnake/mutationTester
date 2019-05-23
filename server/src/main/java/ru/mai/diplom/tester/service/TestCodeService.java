@@ -8,6 +8,7 @@ import ru.mai.diplom.tester.db.dao.TestCodeDataDao;
 import ru.mai.diplom.tester.db.model.TestCodeData;
 import ru.mai.diplom.tester.utils.DigestUtils;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 /**
@@ -65,6 +66,7 @@ public class TestCodeService {
         return dao.findById(id);
     }
 
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public Optional<TestCodeData> findByMd5Data(@NonNull String md5Data) {
         return dao.findByMd5Data(md5Data);
     }

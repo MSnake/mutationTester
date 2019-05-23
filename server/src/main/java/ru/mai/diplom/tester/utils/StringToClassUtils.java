@@ -15,7 +15,7 @@ import java.util.Arrays;
 /**
  * Утилита для преобразования строки исходного кода к класс
  */
-public class StringToClazzUtils {
+public class StringToClassUtils {
 
     /**
      * Компиляция класса
@@ -29,7 +29,7 @@ public class StringToClazzUtils {
         String path = packageName;
         path = path.replace(".", File.separator);
 
-        String absSrcPath = StringToClazzUtils.class.getProtectionDomain()
+        String absSrcPath = StringToClassUtils.class.getProtectionDomain()
                 .getCodeSource().getLocation().getPath();
 
         path = absSrcPath + File.separator + path;
@@ -152,4 +152,5 @@ public class StringToClazzUtils {
         }
         return null;
     }
+
 }

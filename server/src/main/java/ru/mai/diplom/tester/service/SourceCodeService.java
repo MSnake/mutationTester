@@ -44,7 +44,6 @@ public class SourceCodeService {
         return data;
     }
 
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public SourceCodeData save(@NonNull SourceCodeData sourceCodeData) {
         return dao.saveAndFlush(sourceCodeData);
     }

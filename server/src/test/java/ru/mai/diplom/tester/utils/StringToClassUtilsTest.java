@@ -8,12 +8,17 @@ import org.junit.runner.notification.Failure;
 
 import java.io.IOException;
 
-public class StringToClazzUtilsTest {
+public class StringToClassUtilsTest {
+
+    /**
+     *
+     */
+    //
 
     @Test
     public void loadClassFromStringTest(){
         try {
-            Class newClass = StringToClazzUtils.load("package ru.mai.diplom.tester.utils;\n" +
+            Class newClass = StringToClassUtils.load("package ru.mai.diplom.tester.utils;\n" +
                     "\n" +
                     "/**\n" +
                     " * Created by Alex on 17.02.2019.\n" +
@@ -28,7 +33,7 @@ public class StringToClazzUtilsTest {
                     "    }\n" +
                     "}");
             Assert.assertNotNull(newClass);
-            Class testClass = StringToClazzUtils.load("package ru.mai.diplom.tester.utils;\n" +
+            Class testClass = StringToClassUtils.load("package ru.mai.diplom.tester.utils;\n" +
                     "\n" +
                     "import org.junit.Assert;\n" +
                     "import org.junit.Test;\n" +

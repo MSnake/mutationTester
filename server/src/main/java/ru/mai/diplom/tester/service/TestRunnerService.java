@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mai.diplom.tester.db.model.TestResultData;
 import ru.mai.diplom.tester.db.model.TestResultStatusType;
-import ru.mai.diplom.tester.utils.StringToClazzUtils;
+import ru.mai.diplom.tester.utils.StringToClassUtils;
 
 import java.io.IOException;
 
@@ -39,8 +39,8 @@ public class TestRunnerService {
         try {
             result.setStatus(TestResultStatusType.PROCESSED);
             testResultDataService.save(result);
-            Class mutatedClass = StringToClazzUtils.load(testResultData.getMutationData().getCodeText());
-            Class testedClass = StringToClazzUtils.load(testResultData.getTestCodeData().getCodeText());
+            StringToClassUtils.load(testResultData.getMutationData().getCodeText());
+            Class testedClass = StringToClassUtils.load(testResultData.getTestCodeData().getCodeText());
             Result resultTest = JUnitCore.runClasses(testedClass);
             StringBuilder resultTestStringBuilder = new StringBuilder();
             if (!resultTest.getFailures().isEmpty()) {

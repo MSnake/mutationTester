@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
  */
 @Slf4j
 @Component
-@Transactional(Transactional.TxType.REQUIRES_NEW)
 public class SaveTestButtonListener implements ActionListener {
 
     private final CommonUI commonUI;

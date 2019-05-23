@@ -11,7 +11,10 @@ import ru.mai.diplom.tester.db.model.MutationData;
 import ru.mai.diplom.tester.model.MutationOption;
 import ru.mai.diplom.tester.utils.DigestUtils;
 
+import javax.transaction.Transactional;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Сервис для работы мутированием исходного кода
@@ -38,9 +41,9 @@ public class MutationService {
     private final String NEW_ROW_REGEX = "\\r?\\n";
 
     /**
-     * REGEX коментария в коде
+     *  Переход на новую строку
      */
-    private final String CODE_COMMENT_REGEX = "//.*|/\\*((.|\\n)(?!=*/))+\\*/";
+    private final String NEW_LINE = "\n";
 
     /**
      * Сформировать обьект с информацией о преобразованиях
@@ -52,19 +55,9 @@ public class MutationService {
     public MutationData createMutationData(@NonNull String sourceCodeText, List<MutationOption> options) {
         MutationData data = new MutationData();
         String mutatedCode = createMutationCodeFromSource(sourceCodeText, options);
-        String md5 = DigestUtils.getMd5(mutatedCode);
         data.setCodeText(mutatedCode);
         data.setMd5Data(DigestUtils.getMd5(mutatedCode));
         data.setJsonData(toJson(options));
-//        Optional<MutationData> byMd5Data = findByMd5Data(md5);
-//        if (byMd5Data.isPresent()) {
-//            data = byMd5Data.get();
-//        } else {
-//            data = new MutationData();
-//            data.setCodeText(mutatedCode);
-//            data.setMd5Data(DigestUtils.getMd5(mutatedCode));
-//            data.setJsonData(toJson(options));
-//        }
         return data;
     }
 
@@ -81,6 +74,7 @@ public class MutationService {
         return dao.findById(id);
     }
 
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public Optional<MutationData> findByMd5Data(@NonNull String md5Data) {
         return dao.findByMd5Data(md5Data);
     }
@@ -113,24 +107,38 @@ public class MutationService {
      * @return мутант
      */
     public String createMutationCodeFromSource(@NonNull String sourceCodeText, List<MutationOption> options) {
-        final String[] result = {sourceCodeText};
+        long startTime = System.nanoTime();
         // Убираем все коментарии в коде, без потери количества строк
-        result[0] = sourceCodeText.replaceAll(CODE_COMMENT_REGEX, "");
+        String sourceCodeCommentNone = removeComment(sourceCodeText);
+        final String[] result = {sourceCodeCommentNone};
         if (options != null && !options.isEmpty()) {
+            final long[] startSingle = {0};
+            final long[] endSingle = {0};
             options.forEach(option -> {
                 switch (option.getType()) {
                     case REVERT_IF:
+                        startSingle[0] = System.nanoTime();
                         result[0] = revertIf(result[0]);
+                        endSingle[0] = System.nanoTime();
+                        log.info("REVERT_IF MUTATION TIME MS: " + ((endSingle[0] - startSingle[0])));
                         break;
                     case REPLACE_CHARS:
+                        startSingle[0] = System.nanoTime();
                         result[0] = replaceCharacters(result[0], option.getReplaceOptions());
+                        endSingle[0] = System.nanoTime();
+                        log.info("REPLACE_CHARS MUTATION TIME MS: " + ((endSingle[0] - startSingle[0])));
                         break;
                     case REMOVE_ROWS:
+                        startSingle[0] = System.nanoTime();
                         result[0] = removeLines(result[0], option.getRowNumbers());
+                        endSingle[0] = System.nanoTime();
+                        log.info("REMOVE_ROWS MUTATION TIME MS: " + ((endSingle[0] - startSingle[0])));
                         break;
                 }
             });
         }
+        long endTime = System.nanoTime();
+        log.info("ALL MUTATION TIME MS: " + ((endTime - startTime)));
         return result[0];
     }
 
@@ -179,10 +187,10 @@ public class MutationService {
         if (lineNumbers != null && !lineNumbers.isEmpty()) {
             String[] sourceCodeTextRows = sourceCodeText.split(NEW_ROW_REGEX);
             StringBuilder mutatedCode = new StringBuilder();
-            for (int i = 1; i <= sourceCodeTextRows.length; i++) {
-                if (!lineNumbers.contains(i)) {
-                    mutatedCode.append(sourceCodeTextRows[i - 1]);
-                    if (i < sourceCodeTextRows.length) mutatedCode.append(System.lineSeparator());
+            for (int i = 0; i < sourceCodeTextRows.length; i++) {
+                if (!lineNumbers.contains(i+1)) {
+                    mutatedCode.append(sourceCodeTextRows[i]);
+                    if (i < sourceCodeTextRows.length-1) mutatedCode.append(System.lineSeparator());
                 }
             }
             result = (mutatedCode.lastIndexOf(System.lineSeparator()) == mutatedCode.length() - System.lineSeparator().length()) ?
@@ -272,7 +280,55 @@ public class MutationService {
             compileRow.insert(toCloseInvertIndex, ")");
             result = compileRow.toString();
         }
+
         return result;
+    }
+
+    /**
+     * Убираем все коментарии в коде, без потери количества строк
+     *
+     * @param sourceCode исходный код
+     * @return код после удаления коментариев
+     */
+    private String removeComment(String sourceCode) {
+        String[] splited = sourceCode.split(NEW_ROW_REGEX);
+        int i = 0;
+        boolean isPartOfMultiplyComment = false;
+        String endCommentRegEx = "^(\\*)+(\\/){1,}";
+        Pattern p = Pattern.compile(endCommentRegEx);
+        while (i < splited.length) {
+            boolean toReplace = false;
+            String trimedLine = splited[i].trim();
+            if (trimedLine.length() > 0) {
+                Character firstChar = trimedLine.charAt(0);
+                if (firstChar.charValue() == '/') {
+                    Character secondChar = trimedLine.charAt(1);
+                    if (secondChar.charValue() == '*') {
+                        isPartOfMultiplyComment = true;
+                        toReplace = true;
+                    }
+                    if (secondChar.charValue() == '/') {
+                        toReplace = true;
+                    }
+                }
+            }
+            Matcher m = p.matcher(trimedLine);
+            if (m.matches() && m.group().equalsIgnoreCase(trimedLine)) {
+                isPartOfMultiplyComment = false;
+                toReplace = true;
+            }
+            if (isPartOfMultiplyComment) toReplace = true;
+            splited[i] = (toReplace) ? "" : splited[i];
+            i++;
+        }
+        StringBuilder resultBuilder = new StringBuilder();
+        for (int j = 0; j < splited.length; j++) {
+            resultBuilder.append(splited[j]);
+            if (j <splited.length-1){
+                resultBuilder.append(System.lineSeparator());
+            }
+        }
+        return resultBuilder.toString();
     }
 
 }
